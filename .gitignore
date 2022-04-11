@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore save files and ini file
+*.csv
+legoTools.ini

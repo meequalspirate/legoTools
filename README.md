@@ -1,2 +1,2 @@
 # legoTools
-Helpful tools for bulk Lego sets
+Helpful tools for bulk Lego buys

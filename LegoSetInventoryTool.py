@@ -104,7 +104,7 @@ class LegoSetInventoryTool:
     def loadMainWindow(self) :
         
         self.mainWindow = tk.Tk()
-        self.mainWindow.wm_title("Lego Set Inventorier")
+        self.mainWindow.wm_title("Lego Set Inventory Tool")
         self.mainWidth = 0
 
         # Create a ScrolledFrame widget
@@ -137,8 +137,13 @@ class LegoSetInventoryTool:
                     self.legoSetNameText = fileName
                 elif fileExtension == 'csv':
                     csvReader = csv.reader(inputFile, delimiter=',')
+                    readHeader = False
                     for row in csvReader:
-                        tmpElement = LegoElement(row[0], row[1], row[2], row[3], row[4], row[5])
+                        if not readHeader :
+                            readHeader = True
+                            saveFileVersion = row[0]
+                            continue
+                        tmpElement = LegoElement(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
                         self.requiredElements.append(tmpElement)
                         self.legoSetNameText = fileName
         else :
@@ -158,7 +163,14 @@ class LegoSetInventoryTool:
                 if (part["is_spare"]) :
                     continue
 
-                tmpElement = LegoElement(part["part"]["name"], part["part"]["part_num"], part["quantity"], part["color"]["name"], part["part"]["part_img_url"])
+                tmpElement = LegoElement(part["part"]["name"], 
+                                         part["part"]["part_num"], 
+                                         part["part"]["external_ids"]["BrickLink"][0],
+                                         part["quantity"], 
+                                         part["color"]["name"],
+                                         part["color"]["id"],
+                                         part["color"]["external_ids"]["BrickLink"]["ext_ids"][0],
+                                         part["part"]["part_img_url"])
                 self.requiredElements.append(tmpElement)
 
 
@@ -192,9 +204,12 @@ class LegoSetInventoryTool:
         self.showHideBtn = tk.Button(master=self.titleFrame, text="Show All")
         self.showHideBtn.bind("<Button-1>", self.showAll)
         self.showHideBtn.pack(side=RIGHT)
-        self.exportBtn = tk.Button(master=self.titleFrame, text="Rebrickable Export")
-        self.exportBtn.bind("<Button-1>", self.rebrickableExport)
-        self.exportBtn.pack(side=RIGHT)
+        self.rebrickableExportBtn = tk.Button(master=self.titleFrame, text="Rebrickable Export")
+        self.rebrickableExportBtn.bind("<Button-1>", self.rebrickableExport)
+        self.rebrickableExportBtn.pack(side=RIGHT)
+        self.bricklinkExportBtn = tk.Button(master=self.titleFrame, text="BrickLink Export")
+        self.bricklinkExportBtn.bind("<Button-1>", self.bricklinkExport)
+        self.bricklinkExportBtn.pack(side=RIGHT)
         self.titleFrame.pack()
 
         # Resize grid when window size changes
@@ -266,13 +281,19 @@ class LegoSetInventoryTool:
         outputFile = self.legoSetName['text'] + ".csv"
         with open(outputFile, 'w', newline='') as output:
             csvWriter = csv.writer(output, delimiter=',')
+            # Write version info
+            headerRow = ["1.0","","","","","","","",""]
+            csvWriter.writerow(headerRow)
             for i in range(len(self.requiredElements)):
                 row = []
                 tmpElement = self.requiredElements[i]
                 row.append(tmpElement.name)
                 row.append(tmpElement.partNumber)
+                row.append(tmpElement.bricklinkPartNumber)
                 row.append(tmpElement.requiredAmount)
                 row.append(tmpElement.color)
+                row.append(tmpElement.colorId)
+                row.append(tmpElement.bricklinkColorId)
                 row.append(tmpElement.imgPath)
                 
                 tmpBtn = self.pieceButtons[i]
@@ -295,8 +316,8 @@ class LegoSetInventoryTool:
                     output.write("<ITEM>")
 
                     output.write("<ITEMTYPE>P</ITEMTYPE>")
-                    output.write("<ITEMID>" + self.requiredElements[i].partNumber + "</ITEMID>")
-                    output.write("<COLOR>" + str(bricklinkColorDict[self.requiredElements[i].color.lower()]) + "</COLOR>")
+                    output.write("<ITEMID>" + self.requiredElements[i].bricklinkPartNumber + "</ITEMID>")
+                    output.write("<COLOR>" + str(self.requiredElements[i].bricklinkColorId) + "</COLOR>")
                     output.write("<MINQTY>" + str(missingAmount) + "</MINQTY>")
             
                     output.write("</ITEM>")
@@ -305,7 +326,6 @@ class LegoSetInventoryTool:
 
 #************** Export to Rebrickable csv format **************************************             
     def rebrickableExport(self, event):
-        self.createColorDict()
         with open(self.legoSetName['text'] + " missing parts.csv", "w", newline='') as saveFile:
             csvWriter = csv.writer(saveFile, delimiter=',')
             header = ["Part", "Color", "Quantity"]
@@ -317,18 +337,12 @@ class LegoSetInventoryTool:
                 if cur < req:
                     row = []
                     row.append(self.requiredElements[i].partNumber)
-                    row.append(self.colorDict[self.requiredElements[i].color])
+                    row.append(self.requiredElements[i].colorId)
                     
                     missingAmount = req - cur
                     row.append(str(missingAmount))
                     csvWriter.writerow(row)
 
-    def createColorDict(self):
-        self.colorDict = {}
-        with open("colors.csv", 'r') as inputColors:
-            csvReader = csv.reader(inputColors, delimiter=',')
-            for row in csvReader:
-                self.colorDict[row[1]] = row[0]
             
         
 #---- Main ----

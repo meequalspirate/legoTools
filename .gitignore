@@ -130,4 +130,5 @@ dmypy.json
 
 # Ignore save files and ini file
 *.csv
+*.xml
 legoTools.ini

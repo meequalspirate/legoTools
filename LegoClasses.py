@@ -140,11 +140,14 @@ class LegoElement:
     imgPath = None
     photo = None
 
-    def __init__(self, name, partNumber, requiredAmount, color, imgPath, currentAmount=0):
+    def __init__(self, name, partNumber, bricklinkPartNumber, requiredAmount, color, colorId, bricklinkColorId, imgPath, currentAmount=0):
         self.name = name
         self.partNumber = partNumber
+        self.bricklinkPartNumber = bricklinkPartNumber
         self.requiredAmount = requiredAmount
         self.color = color
+        self.colorId = colorId
+        self.bricklinkColorId = bricklinkColorId
         self.imgPath = imgPath
         self.image = Image.open(requests.get(self.imgPath, stream=True).raw)
         self.image = self.image.resize((85,85))

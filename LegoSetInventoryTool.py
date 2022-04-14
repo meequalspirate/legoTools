@@ -107,45 +107,32 @@ class LegoSetInventoryTool:
         self.mainWindow.wm_title("Lego Set Inventory Tool")
         self.mainWidth = 0
 
-        # Create a ScrolledFrame widget
-        self.sf = ScrolledFrame(self.mainWindow, width=640, height=480)
-        self.sf.pack(side="top", expand=1, fill="both")
-        self.sf.bind_arrow_keys(self.mainWindow)
-        self.sf.bind_scroll_wheel(self.mainWindow)
+        self.mainWindow.update()
         
         # Data Structure Creation
         self.requiredElements = []
         if (self.loadInventory) :
-            filePath = filedialog.askopenfilename(filetypes=[("Load Files", ".csv .html")])
+            filePath = filedialog.askopenfilename(filetypes=[("Load Files", ".csv")])
             fileParts = os.path.basename(filePath).split('.')
-            print(fileParts)
             fileName = fileParts[0]
-            fileExtension = fileParts[1]
             with open(filePath, 'r+') as inputFile:
-                if fileExtension == 'html':
-                    # Remove header lines from html
-                    lines = inputFile.readlines()
-                    inputFile.seek(0)
-                    inputFile.truncate()
-                    inputFile.writelines(lines[18:])
-                    inputFile.seek(0)
+                self.legoSetNameText = fileName
+                csvReader = csv.reader(inputFile, delimiter=',')
+                numParts = sum(1 for row in csvReader) - 1
+                inputFile.seek(0)
 
-                    # Parse file
-                    parser = RebrickableHtmlTableParser()
-                    parser.feed(inputFile.read())
-                    self.requiredElements = parser.getElements()
-                    self.legoSetNameText = fileName
-                elif fileExtension == 'csv':
-                    csvReader = csv.reader(inputFile, delimiter=',')
-                    readHeader = False
-                    for row in csvReader:
-                        if not readHeader :
-                            readHeader = True
-                            saveFileVersion = row[0]
-                            continue
-                        tmpElement = LegoElement(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-                        self.requiredElements.append(tmpElement)
-                        self.legoSetNameText = fileName
+                # Load Progress Bar
+                self.loadProgressBar(numParts)
+
+                readHeader = False
+                for row in csvReader:
+                    if not readHeader :
+                        readHeader = True
+                        saveFileVersion = row[0]
+                        continue
+                    self.incrementProgress()
+                    tmpElement = LegoElement(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+                    self.requiredElements.append(tmpElement)
         else :
             # Append set version if necessary
             if ( "-" not in self.setNum ) :
@@ -154,11 +141,14 @@ class LegoSetInventoryTool:
             # Get set name
             setDetails = self.mRbApi.getSetDetails(self.setNum)
             self.legoSetNameText = setDetails["name"]
-            
             # Get parts list from API
             partsList = self.mRbApi.getSetInventory(self.setNum)
 
+            # Load progress bar
+            self.loadProgressBar(len(partsList))
+
             for part in partsList :
+                self.incrementProgress()
                 # Skip spare parts
                 if (part["is_spare"]) :
                     continue
@@ -174,6 +164,14 @@ class LegoSetInventoryTool:
                 self.requiredElements.append(tmpElement)
 
 
+        # Load title frame
+        self.loadTitleFrame()
+
+        # Create a ScrolledFrame widget
+        self.sf = ScrolledFrame(self.mainWindow, width=640, height=480)
+        self.sf.pack(side="top", expand=1, fill="both")
+        self.sf.bind_arrow_keys(self.mainWindow)
+        self.sf.bind_scroll_wheel(self.mainWindow)
 
         # Required Pieces display creation
         self.pieceFrame = self.sf.display_widget(tk.Frame)
@@ -196,26 +194,49 @@ class LegoSetInventoryTool:
                 curCol = 0
                 curRow += 1
             
-
-        # Title Creation
-        self.titleFrame = tk.Frame()
-        self.legoSetName = tk.Label(master=self.titleFrame, text=self.legoSetNameText)
-        self.legoSetName.pack(side = tk.LEFT)
-        self.showHideBtn = tk.Button(master=self.titleFrame, text="Show All")
-        self.showHideBtn.bind("<Button-1>", self.showAll)
-        self.showHideBtn.pack(side=RIGHT)
-        self.rebrickableExportBtn = tk.Button(master=self.titleFrame, text="Rebrickable Export")
-        self.rebrickableExportBtn.bind("<Button-1>", self.rebrickableExport)
-        self.rebrickableExportBtn.pack(side=RIGHT)
-        self.bricklinkExportBtn = tk.Button(master=self.titleFrame, text="BrickLink Export")
-        self.bricklinkExportBtn.bind("<Button-1>", self.bricklinkExport)
-        self.bricklinkExportBtn.pack(side=RIGHT)
-        self.titleFrame.pack()
+        self.removeProgressBar()
 
         # Resize grid when window size changes
         self.mainWindow.bind("<Configure>", self.resize)
-
         self.mainWindow.mainloop()
+
+    def loadProgressBar(self,partNum):
+            self.progressFrame = tk.Frame(self.mainWindow, width=300)
+            self.progressLabel = tk.Label(self.progressFrame, text="Downloading part information...")
+            self.progressLabel.pack(side=TOP)
+            self.loadProgress = Progressbar(self.progressFrame, orient=HORIZONTAL, length=partNum, mode="determinate")
+            self.loadProgress.pack(side=TOP)
+            self.progressFrame.pack()
+
+    def incrementProgress(self):
+        self.mainWindow.update_idletasks()
+        self.loadProgress["value"] += 1
+        if (self.loadProgress["maximum"] == self.loadProgress["value"]):
+            self.progressLabel["text"] = "Creating GUI..."
+    
+    def removeProgressBar(self):
+        self.progressFrame.destroy()
+
+    def loadTitleFrame(self):
+        # Title Creation
+        self.titleFrame = tk.Frame()
+
+        self.legoSetName = tk.Label(master=self.titleFrame, text=self.legoSetNameText)
+        self.legoSetName.pack(side = tk.LEFT)
+
+        self.showHideBtn = tk.Button(master=self.titleFrame, text="Show All")
+        self.showHideBtn.bind("<Button-1>", self.showAll)
+        self.showHideBtn.pack(side=RIGHT)
+
+        self.rebrickableExportBtn = tk.Button(master=self.titleFrame, text="Rebrickable Export")
+        self.rebrickableExportBtn.bind("<Button-1>", self.rebrickableExport)
+        self.rebrickableExportBtn.pack(side=RIGHT)
+
+        self.bricklinkExportBtn = tk.Button(master=self.titleFrame, text="BrickLink Export")
+        self.bricklinkExportBtn.bind("<Button-1>", self.bricklinkExport)
+        self.bricklinkExportBtn.pack(side=RIGHT)
+
+        self.titleFrame.pack()
 
     def redrawGrid(self, allButtons=False):
         curRow = 0

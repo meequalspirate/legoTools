@@ -6,11 +6,6 @@ LEGO SET INVENTORY TOOL
 ***********************************************
     This tool was designed to help sort out pieces for a specific set from a large quantity of bulk Lego. Allows users to input a Lego set number to retrieve a parts inventory from Rebrickable. Pictures of parts are displayed in a grid along with current/required amounts. Once the required quantity for a part is reached the part is removed from the grid to declutter. Amounts are automatically saved to a csv file adjacent to the script in the form <Lego Set Name>.csv. Parts still needed can be exported to BrickLink or Rebrickable format. The BrickLink format will be output to <Lego Set Name>.xml adjacent to the script. The contents of that file can be copied into this webpage for import: https://www.bricklink.com/v2/wanted/upload.page 
 
-***********************************************
-LEGO SET IDENTIFIER
-***********************************************
-    This tool was designed to help identify partially assembled Lego sets. User can input any number of part number/color combinations into the tool. The tool will request all sets containing each part from the Rebrickable API and then display hyperlinks to all sets that contain all of the listed parts.
-
 How to run:
 First you'll need a Rebrickable API key. After creating a Rebrickable account you can generate one here: https://rebrickable.com/users/meequalspirate/settings/#api
 
@@ -26,10 +21,16 @@ Option B: If you're familiar with python/command line
         pip install requests
         pip install tkScrolledFrame
     - Download/clone this repository
-    - Run the 'LegoSetInventoryTool.py' or 'LegoSetIdentifier.py' script
+    - Run the 'LegoSetInventoryTool.py' script
 
 Dependencies:
     Python 3.10.2
     Pillow 9.0.1
     requests 2.27.1
     tkScrolledFrame 1.0.4
+
+***********************************************
+LEGO SET IDENTIFIER
+***********************************************
+    **This script still needs some work to make it a bit more user friendly
+    This tool was designed to help identify partially assembled Lego sets. User can input any number of part number/color combinations into the tool. The tool will request all sets containing each part from the Rebrickable API and then display hyperlinks to all sets that contain all of the listed parts.

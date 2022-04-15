@@ -42,6 +42,7 @@ class LegoSetInventoryTool:
         apiKeyEntry.pack(side=LEFT)
         submitButton = tk.Button(self.rbApiKeyPopup, text="Submit", command=self.submitApiKey)
         submitButton.pack(side=LEFT)
+        self.rbApiKeyPopup.mainloop()
 
     def submitApiKey(self) :
         self.rbApiKey = self.apiKeyVar.get()

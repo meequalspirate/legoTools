@@ -12,7 +12,7 @@ First you'll need a Rebrickable API key. After creating a Rebrickable account yo
 Then to run the script:  
 
 Option A: Easy Mode  
-    - Download and run the latest release executable
+    - Download and run the latest release executable here: https://github.com/meequalspirate/legoTools/releases
 
 Option B: If you're familiar with python/command line  
     - Install python 3.10.2: https://www.python.org/downloads/release/python-3102/  

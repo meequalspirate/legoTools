@@ -28,8 +28,10 @@ Dependencies:
     Pillow 9.0.1  
     requests 2.27.1  
     tkScrolledFrame 1.0.4  
+  
+  
 
 
-If this tool was useful or saved you some time feel free to donate(I told myself if this tool was popular enough I'd buy one of the UCS Star Destroyers):
+If this tool was useful or saved you some time feel free to donate(I told myself if this tool was popular enough I'd buy one of the UCS Star Destroyers):  
 [![Donate](https://img.shields.io/badge/Donate-via%20Square-brightgreen)](https://square.link/u/mq6dSYJS)
 

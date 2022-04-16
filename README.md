@@ -1,5 +1,5 @@
 # legoTools
-Over the past year I've start making bulk purchases of Legos for when my kids are older. I found myself wanting to sort out one or two sets from each bulk lot but I couldn't find a good tool for tracking the pieces as I found them. So I threw together a quick python script to help me keep an inventory of the set pieces as I found them. I thought other people might find this useful so I made it a bit more user friendly and I think I'm ready to share. I've only tested on Windows so I don't know how it will perform on other operating systems. Feel free to report bugs you find, but I'll warn you I have a young toddler and another one the way so bug fixes will only happen sporadically.
+Over the past year I've start making bulk purchases of Legos for when my kids are older. I found myself wanting to sort out one or two sets from each bulk lot but I couldn't find a good tool for tracking the pieces as I found them. So I threw together a quick python script to help me keep an inventory of the set pieces as I found them. I thought other people might find this useful so I made it a bit more user friendly and I think I'm ready to share. I've only tested on Windows so I don't know how it will perform on other operating systems. Feel free to report bugs you find, but I'll warn you I have a young toddler and another one the way so bug fixes will happen sporadically at best.
 
 ***********************************************
 LEGO SET INVENTORY TOOL
@@ -29,8 +29,7 @@ Dependencies:
     requests 2.27.1  
     tkScrolledFrame 1.0.4  
 
-***********************************************
-LEGO SET IDENTIFIER
-***********************************************
-**This script still needs some work to make it a bit more user friendly
-This tool was designed to help identify partially assembled Lego sets. User can input any number of part number/color combinations into the tool. The tool will request all sets containing each part from the Rebrickable API and then display hyperlinks to all sets that contain all of the listed parts.
+
+If this tool was useful or saved you some time feel free to donate(I told myself if this tool was popular enough I'd buy one of the UCS Star Destroyers):
+[![Donate](https://img.shields.io/badge/Donate-via%20Square-brightgreen)](https://square.link/u/mq6dSYJS)
+

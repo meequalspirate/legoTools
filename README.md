@@ -35,3 +35,7 @@ Dependencies:
 If this tool was useful or saved you some time feel free to donate(I told myself if this tool was popular enough I'd buy one of the UCS Star Destroyers):  
 [![Donate](https://img.shields.io/badge/Donate-via%20Square-brightgreen)](https://square.link/u/mq6dSYJS)
 
+
+
+https://user-images.githubusercontent.com/35578881/163728696-eb9f17fa-8831-4fb2-a0a4-ea9c8a8d4758.mp4
+

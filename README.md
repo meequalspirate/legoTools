@@ -4,6 +4,9 @@ Over the past year I've start making bulk purchases of Legos for when my kids ar
 ***********************************************
 LEGO SET INVENTORY TOOL
 ***********************************************
+
+https://user-images.githubusercontent.com/35578881/163728696-eb9f17fa-8831-4fb2-a0a4-ea9c8a8d4758.mp4
+
 This tool was designed to help sort out pieces for a specific set from a large quantity of bulk Lego. Allows users to input a Lego set number to retrieve a parts inventory from Rebrickable. Pictures of parts are displayed in a grid along with current/required amounts. Once the required quantity for a part is reached the part is removed from the grid to declutter. Amounts are automatically saved to a csv file adjacent to the script in the form <Lego Set Name>.csv. Parts still needed can be exported to BrickLink or Rebrickable format. The BrickLink format will be output to <Lego Set Name>.xml adjacent to the script. The contents of that file can be copied into this webpage for import: https://www.bricklink.com/v2/wanted/upload.page 
 
 How to run:  
@@ -37,5 +40,4 @@ If this tool was useful or saved you some time feel free to donate(I told myself
 
 
 
-https://user-images.githubusercontent.com/35578881/163728696-eb9f17fa-8831-4fb2-a0a4-ea9c8a8d4758.mp4
 
